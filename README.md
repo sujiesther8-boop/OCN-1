@@ -6,12 +6,8 @@ To measure propagation loss & bending losses for two different wavelengths in pl
 
 ---
 
-## EQUIPMENTS REQUIRED
-- Link-B Kit with power supply  
-- Patch chords  
-- 20MHz Dual Channel Oscilloscope  
-- 1 MHz Function Generator  
-- 1 Meter Fiber Cable  
+## SOFTWARE REQUIRED
+- GOOGLE COLAB
 
 ---
 
@@ -34,23 +30,19 @@ Since the signal in Optical Fiber is transmitted in the form of light (different
 
 ## PROCEDURE
 
-1. Connect the power supply with proper polarity to the kit link-B and switch it on.  
-2. Keep all Switch Faults in **OFF** position.  
-3. Set switch **SW8 → TX position**.  
-4. Set switch **SW9 → TX1 position**.  
-5. Set Jumper **JP5 → +12V position**.  
-6. Short Jumpers **JP6, JP9, JP10**.  
-7. Set Jumper **JP8 → sine position**.  
-8. Keep Intensity control pot **P2 → minimum position**.  
-9. Feed ~2Vpp sinusoidal signal of 1 KHz from function generator to **IN post of Analog Buffer**.  
-
-10. Connect **OUT of Analog Buffer → TX IN of Transmitter**.  
-11. Loosen cap of **SFH756V (660nm)**, insert 1m fiber, then tighten.  
-12. Connect other end of fiber to **SFH350V (Photo Transistor Detector)** carefully.  
-13. Observe detected signal at **ANALOG OUT** on oscilloscope. Adjust **P2** so signal amplitude = 2Vpp.  
-
-14. Measure peak value at ANALOG OUT = **V1**.  
-15. Replace 1m fiber with 3m fiber (no other changes). Measure peak value = **V2**.  
+1. Import the required Python libraries: NumPy, Pandas, and Matplotlib for numerical calculations, tabular data display, and graph plotting.
+2. Set the signal frequency to 1000 Hz and initialize the propagation loss parameters, including fiber lengths, input amplitudes, and output amplitudes.
+3. Initialize the bending loss parameters, including bending diameters, input amplitudes, and output amplitudes.
+4. Calculate the propagation loss for each fiber length using the formula:
+              LOSS(dB)=20Log Vin/Vout
+5. Calculate the bending loss for each bending diameter using the same formula.
+6. Display the propagation loss results in a table containing fiber length, input voltage, output voltage, and calculated loss in decibels.
+7. Display the bending loss results in a table containing bending diameter, input voltage, output voltage, and calculated loss in decibels.
+8. Generate a time array based on the selected frequency to represent the input and output signals as sinusoidal waveforms.
+9. Plot the input and output voltage waveforms for different fiber lengths to analyze propagation loss. Use solid lines for input signals and dashed lines for output signals.
+10. Plot the input and output voltage waveforms for different bending diameters to analyze bending loss. Use solid lines for input signals and dashed lines for output signals.
+11. Add suitable titles, axis labels, grid lines, and legends to both graphs for clear visualization.
+12. Display the graphs and compare the input and output amplitudes to understand how propagation length and bending diameter affect signal loss.
 
 **Formula:**  
 <img width="758" height="50" alt="image" src="https://github.com/user-attachments/assets/3ec6183f-3031-4862-bb34-9f59c7e29fa3" />
@@ -90,21 +82,148 @@ This \(a\) is for **950nm wavelength**.
 5. Record output voltage readings.  
 6. Plot graph: **Received signal amplitude vs. Loop diameter**.  
 
----
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Change these values whenever you want
+frequency = 1000
+
+# Propagation loss values
+length = [1, 2, 3, 4]
+input_amp = [5.0, 5.0, 5.0, 5.0]
+output_amp = [4.5, 4.2, 3.9, 3.6]
+
+# Bending loss values
+diameter = [30, 25, 20, 15]
+bend_input = [5.0, 5.0, 5.0, 5.0]
+bend_output = [4.8, 4.5, 4.0, 3.2]
+
+# Calculate propagation loss
+prop_loss = [
+    20 * np.log10(i / o)
+    for i, o in zip(input_amp, output_amp)
+]
+
+# Calculate bending loss
+bend_loss = [
+    20 * np.log10(i / o)
+    for i, o in zip(bend_input, bend_output)
+]
+
+# Display propagation table
+print("PROPAGATION LOSS")
+display(pd.DataFrame({
+    "Length (m)": length,
+    "Input (V)": input_amp,
+    "Output (V)": output_amp,
+    "Loss (dB)": np.round(prop_loss, 2)
+}))
+
+# Display bending table
+print("BENDING LOSS")
+display(pd.DataFrame({
+    "Diameter (mm)": diameter,
+    "Input (V)": bend_input,
+    "Output (V)": bend_output,
+    "Loss (dB)": np.round(bend_loss, 2)
+}))
+
+# PROGRAM
+```
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Change these values whenever you want
+frequency = 1000
+
+# Propagation loss values
+length = [1, 2, 3, 4]
+input_amp = [5.0, 5.0, 5.0, 5.0]
+output_amp = [4.5, 4.2, 3.9, 3.6]
+
+# Bending loss values
+diameter = [30, 25, 20, 15]
+bend_input = [5.0, 5.0, 5.0, 5.0]
+bend_output = [4.8, 4.5, 4.0, 3.2]
+
+# Calculate propagation loss
+prop_loss = [
+    20 * np.log10(i / o)
+    for i, o in zip(input_amp, output_amp)
+]
+
+# Calculate bending loss
+bend_loss = [
+    20 * np.log10(i / o)
+    for i, o in zip(bend_input, bend_output)
+]
+
+# Display propagation table
+print("PROPAGATION LOSS")
+display(pd.DataFrame({
+    "Length (m)": length,
+    "Input (V)": input_amp,
+    "Output (V)": output_amp,
+    "Loss (dB)": np.round(prop_loss, 2)
+}))
+
+# Display bending table
+print("BENDING LOSS")
+display(pd.DataFrame({
+    "Diameter (mm)": diameter,
+    "Input (V)": bend_input,
+    "Output (V)": bend_output,
+    "Loss (dB)": np.round(bend_loss, 2)
+}))
+
+# Generate graphs
+t = np.linspace(0, 4 / frequency, 1000)
+
+plt.figure(figsize=(10, 5))
+for i in range(4):
+    plt.plot(t, input_amp[i] * np.sin(2*np.pi*frequency*t),
+             label=f"Input {length[i]} m")
+    plt.plot(t, output_amp[i] * np.sin(2*np.pi*frequency*t),
+             "--", label=f"Output {length[i]} m")
+
+plt.title("Propagation Loss")
+plt.xlabel("Time (s)")
+plt.ylabel("Voltage (V)")
+plt.grid(True)
+plt.legend(ncol=2)
+plt.show()
+
+plt.figure(figsize=(10, 5))
+for i in range(4):
+    plt.plot(t, bend_input[i] * np.sin(2*np.pi*frequency*t),
+             label=f"Input {diameter[i]} mm")
+    plt.plot(t, bend_output[i] * np.sin(2*np.pi*frequency*t),
+             "--", label=f"Output {diameter[i]} mm")
+
+plt.title("Bending Loss")
+plt.xlabel("Time (s)")
+plt.ylabel("Voltage (V)")
+plt.grid(True)
+plt.legend(ncol=2)
+plt.show()
+```
 
 ## TABULATION
 
 ### Propagation Loss
-| Fiber Length | Input Amplitude (V) | Output Amplitude (V) |
-|--------------|----------------------|-----------------------|
-|              |                      |                       |
+<img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/7cc6b386-a650-402c-89a2-731c1658d0f6" />
+
 
 ### Bending Loss
-| Bending Diameter | Input Amplitude (V) | Output Amplitude (V) |
-|------------------|----------------------|-----------------------|
-|                  |                      |                       |
+<img width="1600" height="1380" alt="image" src="https://github.com/user-attachments/assets/22a4e020-5c04-4a2f-a664-ec6ff8a5483c" />
 
----
+
+## GRAPH
+<img width="917" height="467" alt="image" src="https://github.com/user-attachments/assets/85c88e8d-8f05-45fe-b6cf-4a46d1db7a92" />
+<img width="911" height="476" alt="image" src="https://github.com/user-attachments/assets/cd4570dc-1fca-4056-8ac1-d67ca894a4ed" />
+
 
 ## RESULT
 - Propagation loss and bending losses for **660nm** and **950nm** wavelengths were measured.  
