@@ -213,11 +213,11 @@ plt.show()
 ## TABULATION
 
 ### Propagation Loss
-<img width="1600" height="1200" alt="image" src="https://github.com/user-attachments/assets/7cc6b386-a650-402c-89a2-731c1658d0f6" />
+<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/86d90141-096b-44f2-9ee8-3d197c85ff71" />
 
 
 ### Bending Loss
-<img width="1600" height="1380" alt="image" src="https://github.com/user-attachments/assets/22a4e020-5c04-4a2f-a664-ec6ff8a5483c" />
+<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/58b5e847-a5ad-440e-8c2f-995f1dc611ae" />
 
 
 ## GRAPH
